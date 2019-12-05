@@ -1,0 +1,27 @@
+{
+  "name": "udemy-mern",
+  "version": "1.0.0",
+  "description": "Social network for developers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gooddha/udemy-mern.git"
+  },
+  "author": "gooddha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gooddha/udemy-mern/issues"
+  },
+  "homepage": "https://github.com/gooddha/udemy-mern#readme",
+  "dependencies": {
+    "gravatar": "^1.8.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^2.0.1"
+  }
+}
