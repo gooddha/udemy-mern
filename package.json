@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/gooddha/udemy-mern#readme",
   "dependencies": {
-    "gravatar": "^1.8.0"
+    "config": "^3.2.4",
+    "express": "^4.17.1",
+    "gravatar": "^1.8.0",
+    "mongoose": "^5.7.14"
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
