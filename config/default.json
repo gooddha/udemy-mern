@@ -1,4 +1,5 @@
 {
-  "mongoURI": "mongodb+srv://atlas:atlas123@cluster0-rhkjr.mongodb.net/test?retryWrites=true&w=majority",
+  "mongoURI_": "mongodb+srv://atlas:atlas123@cluster0-rhkjr.mongodb.net/test?retryWrites=true&w=majority",
+  "mongoURI": "mongodb://127.0.0.1:27017/dev",
   "jwtSecret": "mysecrettoken"
 }
