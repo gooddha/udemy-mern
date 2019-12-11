@@ -4,7 +4,7 @@ const auth = require('../../middleware/auth');
 const {
   check,
   validationResult
-} = require('express-validator/check');
+} = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
@@ -51,7 +51,7 @@ router.post('/', [auth,
   const {
     company,
     website,
-    locatiob,
+    location,
     bio,
     status,
     githubusername,
@@ -63,8 +63,69 @@ router.post('/', [auth,
     linkedin
   } = req.body;
 
-  //Build profile object
 
+
+  //Build profile object
+  const profileFields = {};
+  profileFields.user = req.user.id;
+  // [company, website, location, bio, status, githubusername].forEach((value, key, arr) => {
+  //   if (value) profileFields[key] = value;
+  // });
+
+  if (company) profileFields.company = company;
+  if (website) profileFields.website = website;
+  if (location) profileFields.location = location;
+  if (bio) profileFields.bio = bio;
+  if (status) profileFields.status = status;
+  if (githubusername) profileFields.githubusername = githubusername;
+  if (skills) {
+    profileFields.skills = skills.split(',').map(skill => skill.trim());
+  }
+
+  // Build social object
+  profileFields.social = {};
+  if (youtube) profileFields.social.youtube = youtube;
+  if (twitter) profileFields.social.twitter = twitter;
+  if (facebook) profileFields.social.facebook = facebook;
+  if (linkedin) profileFields.social.linkedin = linkedin;
+  if (instagram) profileFields.social.instagram = instagram;
+
+  // [youtube, twitter, facebook, linkedin, instagram].forEach((value, key, arr) => {
+  //   if (value) profileFields[key] = value;
+  //   console.log(key, value, arr);
+  // });
+
+  try {
+    let profile = Profile.findOne({
+      user: req.user.id
+    });
+
+    if (profile) {
+      console.log(profile);
+      // Update
+      profile = await Profile.findOneAndUpdate({
+        user: req.user.id
+      }, {
+        $set: profileFields
+      }, {
+        new: true
+      });
+
+      console.log(profile);
+      return res.json(profile);
+    }
+
+    // Create 
+    profile = new Profile(profileFields);
+    console.log(profile);
+
+    await profile.save();
+    return res.json(profile);
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Sever error');
+  }
 
 });
 
