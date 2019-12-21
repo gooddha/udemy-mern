@@ -40,6 +40,8 @@ router.post('/', [auth,
     check('skills', 'Skills is required').not().isEmpty()
   ]
 ], async (req, res) => {
+  console.log(req);
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -62,7 +64,6 @@ router.post('/', [auth,
     instagram,
     linkedin
   } = req.body;
-
 
 
   //Build profile object
@@ -95,13 +96,30 @@ router.post('/', [auth,
   //   console.log(key, value, arr);
   // });
 
+  // try {
+  //   // Using upsert option (creates new doc if no match is found):
+  //   let profile = await Profile.findOneAndUpdate({
+  //     user: req.user.id
+  //   }, {
+  //     $set: profileFields
+  //   }, {
+  //     new: true,
+  //     upsert: true
+  //   });
+  //   res.json(profile);
+  // } catch (err) {
+  //   console.error(err.message);
+  //   res.status(500).send('Server Error');
+  // }
+
   try {
+
     let profile = Profile.findOne({
       user: req.user.id
     });
 
     if (profile) {
-      console.log(profile);
+      console.log("Profile exists, updating...");
       // Update
       profile = await Profile.findOneAndUpdate({
         user: req.user.id
@@ -111,16 +129,17 @@ router.post('/', [auth,
         new: true
       });
 
-      console.log(profile);
+      // console.log(profile);
       return res.json(profile);
     }
 
     // Create 
     profile = new Profile(profileFields);
-    console.log(profile);
+    console.log("profile is created");
 
     await profile.save();
     return res.json(profile);
+
 
   } catch (err) {
     console.error(err.message);
