@@ -16,7 +16,7 @@ router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.user.id
-    }).populate('user', ['name', 'avatar']);
+    }).populate('user', 'name avatar');
 
     if (!profile) {
       return res.status(400).json({
@@ -40,7 +40,6 @@ router.post('/', [auth,
     check('skills', 'Skills is required').not().isEmpty()
   ]
 ], async (req, res) => {
-  console.log(req);
 
   const errors = validationResult(req);
 
@@ -119,14 +118,14 @@ router.post('/', [auth,
     });
 
     if (profile) {
-      console.log("Profile exists, updating...");
       // Update
       profile = await Profile.findOneAndUpdate({
         user: req.user.id
       }, {
         $set: profileFields
       }, {
-        new: true
+        new: true,
+        upsert: true
       });
 
       // console.log(profile);
@@ -135,7 +134,6 @@ router.post('/', [auth,
 
     // Create 
     profile = new Profile(profileFields);
-    console.log("profile is created");
 
     await profile.save();
     return res.json(profile);
@@ -147,5 +145,47 @@ router.post('/', [auth,
   }
 
 });
+
+// @route   GET api/profile
+// @des     Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @des     Get profile by user ID
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id
+    }).populate('user', ['name', 'avatar']);
+
+    if (!profile) {
+      return res.status(400).json({
+        msg: 'Profile not found'
+      });
+    }
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'Profile not found'
+      });
+    }
+
+    res.status(500).send('Server error');
+  }
+});
+
 
 module.exports = router;
