@@ -8,10 +8,12 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <ul>
       <li>
+        <i className="fas fa-user"></i>
         <Link to='/dashboard'>Dashboard</Link>
       </li>
       <li>
         <a onClick={logout} href='#!'>
+        <i className="fas fa-sign-out-alt"></i>
           <span className=''>Logout</span>
         </a>
       </li>
@@ -48,7 +50,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
-  auth: PropTypes.bool
+  auth: PropTypes.object
 };
 
 const mapStateToProps = state => ({
