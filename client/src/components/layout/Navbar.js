@@ -8,8 +8,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <ul>
       <li>
+        <Link to='/dashboard'>Dashboard</Link>
+      </li>
+      <li>
         <a onClick={logout} href='#!'>
-          <span className="">Logout</span>
+          <span className=''>Logout</span>
         </a>
       </li>
     </ul>
@@ -36,7 +39,9 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <i className='fas fa-code'></i> DevConnector
         </Link>
       </h1>
-      {!loading && (<Fragment>{ isAuthenticated ? authLinks : guestLinks }</Fragment>)}
+      {!loading && (
+        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+      )}
     </nav>
   );
 };
@@ -44,10 +49,10 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
   auth: PropTypes.bool
-}
+};
 
 const mapStateToProps = state => ({
   auth: state.auth
-})
+});
 
 export default connect(mapStateToProps, { logout })(Navbar);
