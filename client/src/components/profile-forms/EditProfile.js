@@ -1,10 +1,15 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createProfile } from '../../actions/profile';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile, history }) => {
+const EditProfile = ({ 
+  createProfile, 
+  getCurrentProfile, 
+  profile: { profile, loading }, 
+  history 
+}) => {
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -21,6 +26,28 @@ const CreateProfile = ({ createProfile, history }) => {
   });
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+  useEffect(() => {
+    getCurrentProfile();
+
+    setFormData({
+      company:  loading || !profile.company  ? '' : profile.company,
+      website:  loading || !profile.website  ? '' : profile.website,
+      location: loading || !profile.location ? '' : profile.location,
+      status:   loading || !profile.status   ? '' : profile.status,
+      skills:   loading || !profile.skills   ? '' : profile.skills.join(','),
+      githubusername: 
+                loading || !profile.githubusername 
+                                             ? '' : profile.githubusername,
+      bio:      loading || !profile.bio      ? '' : profile.bio,
+      twitter:  loading || !profile.social   ? '' : profile.social.twitter,
+      facebook: loading || !profile.social   ? '' : profile.social.facebook,
+      linkedin: loading || !profile.social   ? '' : profile.social.company,
+      youtube:  loading || !profile.social   ? '' : profile.social.youtube,
+      instagram:loading || !profile.social   ? '' : profile.social.instagram,
+    });
+
+  }, [loading]);
 
   const {
     company,
@@ -40,7 +67,7 @@ const CreateProfile = ({ createProfile, history }) => {
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
     e.preventDefault();
-    createProfile(formData, history);
+    createProfile(formData, history, true);
   }
 
   return (
@@ -49,8 +76,8 @@ const CreateProfile = ({ createProfile, history }) => {
         Create Your Profile
       </h1>
       <p className="lead">
-        <i className="fas fa-user"></i> Let's get some information to make your
-        profile stand out
+        <i className="fas fa-user"></i> 
+        Let's get some information to make your profile stand out
       </p>
       <small>* = required field</small>
       <form className="form" onSubmit={e => onSubmit(e)}>
@@ -76,9 +103,7 @@ const CreateProfile = ({ createProfile, history }) => {
             value={company} 
             onChange={e => onChange(e)} 
           />
-          <small className="form-text"
-            >Could be your own company or one you work for</small
-          >
+          <small className="form-text">Could be your own company or one you work for</small>
         </div>
         <div className="form-group">
           <input 
@@ -108,10 +133,8 @@ const CreateProfile = ({ createProfile, history }) => {
             value={skills} 
             onChange={e => onChange(e)} 
           />
-          <small className="form-text"
-            >Please use comma separated values (eg.
-            HTML,CSS,JavaScript,PHP)</small
-          >
+          <small className="form-text">Please use comma separated values (eg.
+            HTML,CSS,JavaScript,PHP)</small>
         </div>
         <div className="form-group">
           <input
@@ -121,10 +144,8 @@ const CreateProfile = ({ createProfile, history }) => {
             value={githubusername} 
             onChange={e => onChange(e)}
           />
-          <small className="form-text"
-            >If you want your latest repos and a Github link, include your
-            username</small
-          >
+          <small className="form-text">If you want your latest repos and a Github link, include your
+            username</small>
         </div>
         <div className="form-group">
           <textarea 
@@ -210,10 +231,15 @@ const CreateProfile = ({ createProfile, history }) => {
   );
 };
 
-CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired
+EditProfile.propTypes = {
+  profile: PropTypes.object.isRequired,
+  createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+  profile: state.profile
+});
 
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(EditProfile));
