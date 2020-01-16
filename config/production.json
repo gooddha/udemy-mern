@@ -1,0 +1,7 @@
+{
+  "mongoURI": "mongodb+srv://atlas:atlas123@cluster0-rhkjr.mongodb.net/test?retryWrites=true&w=majority",
+  "mongoURI_": "mongodb://127.0.0.1:27017/dev",
+  "jwtSecret": "mysecrettoken",
+  "githubClientId": "2908971130ab26ec3b27",
+  "githubSecret": "9dccb80dc8522b3a4c77da541119a92c6eaf7dfd"
+}
