@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
-const config = require("config");
-const db = config.get("mongoURI");
+const mongoose = require('mongoose');
+const config = require('config');
+const db = config.get('mongoURI');
+const os = require('os');
 
 // mongoose.connect(db)
 
@@ -12,8 +13,9 @@ const connectDB = async () => {
       useCreateIndex: true,
       useFindAndModify: false
     });
-    console.log("MongoDB connected...");
+    console.log('MongoDB connected...');
   } catch (err) {
+    console.log(os.networkInterfaces);
     console.error(err.message);
     process.exit(1);
   }
